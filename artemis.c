@@ -17,6 +17,11 @@ double distanciaMaxima(double v0, double r0) {
     return 1.0 / (1.0 / r0 - v0 * v0 / (2.0 * G * MASA_TIERRA));
 }
 
+/* K = 1/2 * m * v^2  (resultado en Joules) */
+double energiaCinetica(double masa, double velocidad) {
+    return 0.5 * masa * velocidad * velocidad;
+}
+
 /* ===== Simulacion ===== */
 void cargarNave(Nave *nave) {
     double altura = ALTURA_LEO;
@@ -59,6 +64,11 @@ void mostrarIntroduccion(void) {
            "cada vez menos, porque esa fuerza disminuye con 1/r^2.\n\n");
 }
 
+void mostrarEnergiaCinetica(const Nave *nave) {
+    printf("\nEnergia cinetica inicial: %.3e J\n",
+           energiaCinetica(nave->masa, nave->velocidad));
+}
+
 void mostrarHistorial(const Nave historial[], int cantidad) {
     int i;
 
@@ -74,6 +84,6 @@ void mostrarResultadoFinal(const Nave *nave) {
         printf("\nLa gravedad detuvo a Orion a %.1f km del centro de la Tierra.\n",
                nave->distancia / 1000.0);
     } else {
-        printf("\nOrion alcanzo la distancia de la Luna con %.2f m/s.\n", nave->velocidad);
+        printf("\nOrion llegó a la Luna con %.2f m/s.\n", nave->velocidad);
     }
 }

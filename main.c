@@ -9,6 +9,7 @@ int main(void) {
 
     mostrarIntroduccion();
     cargarNave(&orion);
+    mostrarEnergiaCinetica(&orion);
     cantidad = simularInercia(&orion, historial, MAX_TURNOS);
     mostrarHistorial(historial, cantidad);
     mostrarResultadoFinal(&orion);

@@ -25,12 +25,16 @@ double aceleracionGravitatoria(double r);
 double velocidadEnDistancia(double v0, double r0, double r);
 double distanciaMaxima(double v0, double r0);
 
+/* ===== Energia (Escenario 3, item b) ===== */
+double energiaCinetica(double masa, double velocidad);
+
 /* ===== Simulacion (Escenario 3, item a) ===== */
 void cargarNave(Nave *nave);
 int  simularInercia(Nave *nave, Nave historial[], int maxTurnos);
 
 /* ===== Salida por consola ===== */
 void mostrarIntroduccion(void);
+void mostrarEnergiaCinetica(const Nave *nave);
 void mostrarHistorial(const Nave historial[], int cantidad);
 void mostrarResultadoFinal(const Nave *nave);
 
