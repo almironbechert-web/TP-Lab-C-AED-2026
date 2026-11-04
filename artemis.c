@@ -8,6 +8,17 @@ double aceleracionGravitatoria(double r) {
     return G * MASA_TIERRA / (r * r);
 }
 
+/* ===== Trabajo hasta el punto de equilibrio (item c) ===== */
+/* r_eq = D / (1 + sqrt(M_L/M_T))  (m desde el centro de la Tierra) */
+double puntoEquilibrio(double distanciaTierraLuna) {
+    return distanciaTierraLuna / (1.0 + sqrt(MASA_LUNA / MASA_TIERRA));
+}
+
+/* W/m = G*M_T*(1/r0 - 1/r_eq)  (J/kg) */
+double trabajoPorKg(double r0, double rEq) {
+    return G * MASA_TIERRA * (1.0 / r0 - 1.0 / rEq);
+}
+
 double velocidadEnDistancia(double v0, double r0, double r) {
     double v2 = v0 * v0 - 2.0 * G * MASA_TIERRA * (1.0 / r0 - 1.0 / r);
     return (v2 < 0.0) ? -1.0 : sqrt(v2);
@@ -96,6 +107,33 @@ void mostrarEnergiaCinetica(const Nave *nave) {
            energiaCinetica(nave->masa, nave->velocidad));
 }
 
+void mostrarTrabajoEquilibrio(const Nave *inicial) {
+    double rEq    = puntoEquilibrio(DISTANCIA_TL);
+    double w      = trabajoPorKg(inicial->distancia, rEq);
+    double kPorKg = 0.5 * inicial->velocidad * inicial->velocidad;   /* K/m = v^2/2 */
+
+    printf("\n=== 1.c TRABAJO HASTA EL PUNTO DE EQUILIBRIO TIERRA-LUNA ===\n"
+           "Formulas utilizadas (D = distancia Tierra-Luna, r0 = distancia inicial,\n"
+           "M_T = masa de la Tierra, M_L = masa de la Luna, v = velocidad de inyeccion):\n"
+           "  Punto de equilibrio      : r_eq = D / (1 + sqrt(M_L/M_T))\n"
+           "  Trabajo minimo por kg    : W/m = G*M_T*(1/r0 - 1/r_eq)\n"
+           "  Energia cinetica por kg  : K/m = v^2/2\n\n");
+
+    printf("Distancia inicial (r0)        : %.1f km\n", inicial->distancia / 1000.0);
+    printf("Punto de equilibrio (r_eq)    : %.1f km del centro de la Tierra\n", rEq / 1000.0);
+    printf("Trabajo minimo total          : %.3e J/kg\n", w);
+    printf("Energia cinetica de la TLI    : %.3e J/kg\n", kPorKg);
+
+    if (w > kPorKg) {
+        printf("Trabajo adicional que falta   : %.3e J/kg\n", w - kPorKg);
+        printf("(Con solo la inyeccion, Orion no llega al punto de equilibrio.)\n");
+    } else {
+        printf("La TLI alcanza: sobran %.3e J/kg para llegar al punto de equilibrio.\n",
+               kPorKg - w);
+    }
+    printf("PD: Modelo simplificado, solo se considera el potencial terrestre.\n");
+}
+
 void mostrarHistorial(const Nave historial[], int cantidad) {
     int i;
 
@@ -172,6 +210,6 @@ void ejecutarAnalisisFisico(void) {
     mostrarHistorial(historial, cantidad);
     mostrarResultadoFinal(&orion, &historial[0]);
     mostrarEnergiaCinetica(&historial[0]);   /* historial[0] = estado inicial */
-    /* TODO item c: agregar aqui la llamada a la funcion del item c */
+    mostrarTrabajoEquilibrio(&historial[0]); /* item c: usa el estado inicial */
     mostrarJustificacionEnergetica(&orion);
 }
