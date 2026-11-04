@@ -59,12 +59,12 @@ void cargarNave(Nave *nave) {
     nave->aceleracion = aceleracionGravitatoria(nave->distancia);
 }
 
-int simularInercia(Nave *nave, Nave historial[], int maxTurnos) {
+int simularInercia(Nave *nave, Nave historial[], int maxTramos) {
     double v0 = nave->velocidad, r0 = nave->distancia, v;
     int n = 0;
 
     historial[n++] = *nave;
-    while (n < maxTurnos && nave->velocidad > 0.0 && nave->distancia < DISTANCIA_TL) {
+    while (n < maxTramos && nave->velocidad > 0.0 && nave->distancia < DISTANCIA_TL) {
         nave->distancia = fmin(nave->distancia + PASO_DISTANCIA, DISTANCIA_TL);
         v = velocidadEnDistancia(v0, r0, nave->distancia);
         if (v < 0.0) {
@@ -99,7 +99,7 @@ void mostrarEnergiaCinetica(const Nave *nave) {
 void mostrarHistorial(const Nave historial[], int cantidad) {
     int i;
 
-    printf("\nTurno | Distancia (km) | Velocidad (m/s) | Aceleracion (m/s^2)\n");
+    printf("\nTramo | Distancia (km) | Velocidad (m/s) | Aceleracion (m/s^2)\n");
     for (i = 0; i < cantidad; i++) {
         printf("%5d | %14.1f | %15.2f | %19.5f\n", i, historial[i].distancia / 1000.0,
                historial[i].velocidad, historial[i].aceleracion);
@@ -159,4 +159,19 @@ void mostrarJustificacionEnergetica(const Nave *nave) {
            "  - La gravedad terrestre acelera a Orion durante la caida hacia la Tierra.\n"
            "  - La atmosfera frena la capsula sin gastar combustible (escenario 4).\n"
            "PD: Modelo simplificado sin perdidas gravitatorias ni maniobras reales.\n");
+}
+
+void ejecutarAnalisisFisico(void) {
+    Nave orion;
+    Nave historial[MAX_TRAMOS];
+    int cantidad;
+
+    mostrarIntroduccion();
+    cargarNave(&orion);
+    cantidad = simularInercia(&orion, historial, MAX_TRAMOS);
+    mostrarHistorial(historial, cantidad);
+    mostrarResultadoFinal(&orion, &historial[0]);
+    mostrarEnergiaCinetica(&historial[0]);   /* historial[0] = estado inicial */
+    /* TODO item c: agregar aqui la llamada a la funcion del item c */
+    mostrarJustificacionEnergetica(&orion);
 }

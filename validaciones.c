@@ -30,6 +30,24 @@ double leerDouble(const char *mensaje, double min, double max) {
     }
 }
 
+int leerEntero(const char *mensaje, int min, int max) {
+    char entrada[LARGO_ENTRADA], *fin;
+    long valor;
+
+    while (1) {
+        printf("%s [%d - %d]: ", mensaje, min, max);
+        leerLinea(entrada);
+        valor = strtol(entrada, &fin, 10);
+        if (fin == entrada || *fin != '\0') {
+            printf("ERROR: ingrese solo un numero entero.\n");
+        } else if (valor < min || valor > max) {
+            printf("ERROR: valor fuera de rango.\n");
+        } else {
+            return (int)valor;
+        }
+    }
+}
+
 char leerSiNo(const char *mensaje) {
     char entrada[LARGO_ENTRADA];
 

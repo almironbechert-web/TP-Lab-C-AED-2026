@@ -1,20 +1,49 @@
 #include <stdio.h>
 #include "artemis.h"
+#include "juego.h"
 #include "validaciones.h"
 
 int main(void) {
-    Nave orion;
-    Nave historial[MAX_TURNOS];
-    int cantidad;
+    Mision ultimaMision;
+    int hayMision = 0;
+    int opcion;
 
-    mostrarIntroduccion();
-    cargarNave(&orion);
-    cantidad = simularInercia(&orion, historial, MAX_TURNOS);
-    mostrarHistorial(historial, cantidad);
-    mostrarResultadoFinal(&orion, &historial[0]);
-    mostrarEnergiaCinetica(&historial[0]);   /* historial[0] = estado inicial de la nave */
-    mostrarJustificacionEnergetica(&orion);
+    inicializarMision(&ultimaMision);
+    do {
+        printf("\n=== ARTEMIS - INYECCION TRANSLUNAR ===\n"
+               "1. Jugar mision\n"
+               "2. Analisis fisico (items a, b y d)\n"
+               "3. Ver reporte de la ultima mision\n"
+               "4. Reglas del juego\n"
+               "0. Salir\n");
+        opcion = leerEntero("Opcion", 0, 4);
 
-    esperarEnter("\nPresione Enter para salir...");
+        switch (opcion) {
+            case 1:
+                jugarMision(&ultimaMision);
+                hayMision = 1;
+                break;
+            case 2:
+                ejecutarAnalisisFisico();
+                break;
+            case 3:
+                if (hayMision) {
+                    mostrarReporte(&ultimaMision);
+                } else {
+                    printf("\nTodavia no jugaste ninguna mision.\n");
+                }
+                break;
+            case 4:
+                mostrarReglas();
+                break;
+            default:
+                printf("\nFin del programa. Hasta la proxima!\n");
+                break;
+        }
+        if (opcion != 0) {
+            esperarEnter("\nPresione Enter para volver al menu...");
+        }
+    } while (opcion != 0);
+
     return 0;
 }

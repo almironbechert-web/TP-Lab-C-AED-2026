@@ -1,7 +1,7 @@
 CC      = gcc
 CFLAGS  = -Wall -Wextra -std=c99
 LDLIBS  = -lm
-OBJS    = main.o artemis.o validaciones.o
+OBJS    = main.o artemis.o juego.o validaciones.o
 
 ifeq ($(OS),Windows_NT)
     TARGET = artemis.exe
@@ -16,8 +16,9 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDLIBS)
 
-main.o: main.c artemis.h validaciones.h
+main.o: main.c artemis.h juego.h validaciones.h
 artemis.o: artemis.c artemis.h validaciones.h
+juego.o: juego.c juego.h artemis.h validaciones.h
 validaciones.o: validaciones.c validaciones.h
 
 clean:
