@@ -13,7 +13,8 @@
 #define MAX_TURNOS     25
 #define MASA_LUNA      7.342e22
 #define RADIO_LUNA     1737400.0
-#define VE_COMBUSTIBLE 4500.0   /* velocidad de escape de gases (H2-O2), m/s */
+#define VE_COMBUSTIBLE 4500.0   /* velocidad de salida de los gases (H2-O2), m/s */
+#define NOMBRE_COMBUSTIBLE "hidrogeno y oxigeno liquidos"
 
 /* ===== Estructuras ===== */
 typedef struct {
@@ -46,6 +47,6 @@ void mostrarIntroduccion(void);
 void mostrarEnergiaCinetica(const Nave *nave);
 void mostrarHistorial(const Nave historial[], int cantidad);
 void mostrarJustificacionEnergetica(const Nave *nave);
-void mostrarResultadoFinal(const Nave *nave);
+void mostrarResultadoFinal(const Nave *final, const Nave *inicial);
 
 #endif

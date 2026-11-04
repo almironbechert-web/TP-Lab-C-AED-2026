@@ -83,11 +83,16 @@ void mostrarIntroduccion(void) {
     printf("\n=== 1.a LEY DE NEWTON - INERCIA ===\n"
            "Sin motores, nada empuja a Orion: por inercia sigue moviendose sola.\n"
            "Pero la gravedad terrestre tira en contra del movimiento y la frena,\n"
-           "cada vez menos, porque esa fuerza disminuye con 1/r^2.\n\n");
+           "cada vez menos, porque esa fuerza disminuye con 1/r^2.\n"
+           "(r = distancia desde el centro de la Tierra hasta Orion; es la columna\n"
+           "'Distancia' de la tabla. Al inicio vale: radio terrestre + altura de la orbita.)\n\n");
 }
 
 void mostrarEnergiaCinetica(const Nave *nave) {
-    printf("\nEnergia cinetica inicial: %.3e J\n",
+    printf("\n=== 1.b ENERGIA CINETICA INICIAL ===\n"
+           "Formula utilizada (m = masa de Orion, v = velocidad inicial de inyeccion):\n"
+           "  Energia cinetica : K = 1/2*m*v^2\n\n"
+           "Energia cinetica inicial: %.3e J\n",
            energiaCinetica(nave->masa, nave->velocidad));
 }
 
@@ -101,12 +106,19 @@ void mostrarHistorial(const Nave historial[], int cantidad) {
     }
 }
 
-void mostrarResultadoFinal(const Nave *nave) {
-    if (nave->velocidad == 0.0) {
+void mostrarResultadoFinal(const Nave *final, const Nave *inicial) {
+    double vEsc = velocidadEscape(MASA_TIERRA, inicial->distancia);
+
+    if (final->velocidad == 0.0) {
         printf("\nLa gravedad detuvo a Orion a %.1f km del centro de la Tierra.\n",
-               nave->distancia / 1000.0);
+               final->distancia / 1000.0);
+        printf("Motivo: partio de %.1f km con %.2f m/s, pero la velocidad de escape a esa\n"
+               "distancia es %.2f m/s (le faltaron %.2f m/s).\n",
+               inicial->distancia / 1000.0, inicial->velocidad, vEsc, vEsc - inicial->velocidad);
+        printf("(v_esc = sqrt(2*G*M/r), con M = masa de la Tierra y r = distancia inicial:\n"
+               "no depende de la masa de Orion.)\n");
     } else {
-        printf("\nOrion alcanzo la distancia de la Luna con %.2f m/s.\n", nave->velocidad);
+        printf("\nOrion alcanzo la distancia de la Luna con %.2f m/s.\n", final->velocidad);
     }
 }
 
@@ -123,8 +135,9 @@ void mostrarJustificacionEnergetica(const Nave *nave) {
         comb[i]    = combustibleNecesario(nave->masa, vEsc[i]);
     }
 
-    printf("\n=== 1.d JUSTIFICACION ENERGETICA: IDA vs REGRESO ===\n"
-           "Formulas utilizadas (R = radio, M = masa del cuerpo, m = masa de Orion):\n"
+    printf("\n=== 1.d JUSTIFICACION ENERGETICA: IDA Y REGRESO ===\n"
+           "Formulas utilizadas (G = constante de gravitacion universal, R = radio,\n"
+           "M = masa del cuerpo, m = masa de Orion, ve = velocidad de salida de los gases):\n"
            "  Pozo de potencial     : U = G*M/R\n"
            "  Velocidad de escape   : v_esc = sqrt(2*G*M/R)\n"
            "  Energia para escapar  : E = m*G*M/R\n"
@@ -138,12 +151,12 @@ void mostrarJustificacionEnergetica(const Nave *nave) {
     printf("%-28s | %12.3e | %12.3e\n", "Energia para escapar (J)", energia[0], energia[1]);
 
     printf("\nCombustible estimado (ve = %.0f m/s):\n", VE_COMBUSTIBLE);
-    printf("  Ida (escapar de la Tierra): %10.0f kg\n", comb[0]);
-    printf("  Vuelta (escapar de la Luna): %9.0f kg\n", comb[1]);
+    printf("  Ida (escapar de la Tierra):  %9.0f kg de %s\n", comb[0], NOMBRE_COMBUSTIBLE);
+    printf("  Vuelta (escapar de la Luna): %9.0f kg de %s\n", comb[1], NOMBRE_COMBUSTIBLE);
     printf("  La ida requiere %.1f veces mas combustible que la vuelta.\n", comb[0] / comb[1]);
 
     printf("\nAyudas al regreso:\n"
            "  - La gravedad terrestre acelera a Orion durante la caida hacia la Tierra.\n"
            "  - La atmosfera frena la capsula sin gastar combustible (escenario 4).\n"
-           "Modelo simplificado: sin perdidas gravitatorias ni maniobras reales.\n");
+           "PD: Modelo simplificado sin perdidas gravitatorias ni maniobras reales.\n");
 }
