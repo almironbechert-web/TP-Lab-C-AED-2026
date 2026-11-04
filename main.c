@@ -9,10 +9,11 @@ int main(void) {
 
     mostrarIntroduccion();
     cargarNave(&orion);
-    mostrarEnergiaCinetica(&orion);
+    mostrarEnergiaCinetica(&orion);   /* antes de simular: la simulacion modifica orion */
     cantidad = simularInercia(&orion, historial, MAX_TURNOS);
     mostrarHistorial(historial, cantidad);
     mostrarResultadoFinal(&orion);
+    mostrarJustificacionEnergetica(&orion);
 
     esperarEnter("\nPresione Enter para salir...");
     return 0;

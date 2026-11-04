@@ -22,6 +22,28 @@ double energiaCinetica(double masa, double velocidad) {
     return 0.5 * masa * velocidad * velocidad;
 }
 
+/* ===== Justificacion energetica (item d) ===== */
+
+/* U = G*M/R  (J/kg): energia por kg que hay que aportar para salir del cuerpo */
+double pozoPotencial(double masaCuerpo, double radio) {
+    return G * masaCuerpo / radio;
+}
+
+/* v_esc = sqrt(2*G*M/R)  (m/s) */
+double velocidadEscape(double masaCuerpo, double radio) {
+    return sqrt(2.0 * pozoPotencial(masaCuerpo, radio));
+}
+
+/* E = m * G*M/R  (J) */
+double energiaEscape(double masaNave, double masaCuerpo, double radio) {
+    return masaNave * pozoPotencial(masaCuerpo, radio);
+}
+
+/* Ecuacion del cohete (Tsiolkovsky): m_comb = m * (e^(dV/ve) - 1)  (kg) */
+double combustibleNecesario(double masaNave, double deltaV) {
+    return masaNave * (exp(deltaV / VE_COMBUSTIBLE) - 1.0);
+}
+
 /* ===== Simulacion ===== */
 void cargarNave(Nave *nave) {
     double altura = ALTURA_LEO;
@@ -84,6 +106,44 @@ void mostrarResultadoFinal(const Nave *nave) {
         printf("\nLa gravedad detuvo a Orion a %.1f km del centro de la Tierra.\n",
                nave->distancia / 1000.0);
     } else {
-        printf("\nOrion llegó a la Luna con %.2f m/s.\n", nave->velocidad);
+        printf("\nOrion alcanzo la distancia de la Luna con %.2f m/s.\n", nave->velocidad);
     }
+}
+
+void mostrarJustificacionEnergetica(const Nave *nave) {
+    double masas[2]  = {MASA_TIERRA, MASA_LUNA};
+    double radios[2] = {RADIO_TIERRA, RADIO_LUNA};
+    double pozo[2], vEsc[2], energia[2], comb[2];
+    int i;
+
+    for (i = 0; i < 2; i++) {
+        pozo[i]    = pozoPotencial(masas[i], radios[i]);
+        vEsc[i]    = velocidadEscape(masas[i], radios[i]);
+        energia[i] = energiaEscape(nave->masa, masas[i], radios[i]);
+        comb[i]    = combustibleNecesario(nave->masa, vEsc[i]);
+    }
+
+    printf("\n=== 1.d JUSTIFICACION ENERGETICA: IDA vs REGRESO ===\n"
+           "Formulas utilizadas (R = radio, M = masa del cuerpo, m = masa de Orion):\n"
+           "  Pozo de potencial     : U = G*M/R\n"
+           "  Velocidad de escape   : v_esc = sqrt(2*G*M/R)\n"
+           "  Energia para escapar  : E = m*G*M/R\n"
+           "  Combustible (cohete)  : m_comb = m*(e^(v_esc/ve) - 1)\n\n");
+
+    printf("Masa de Orion usada: %.0f kg\n", nave->masa);
+    printf("%-28s | %12s | %12s\n", "Tema a analizar", "Tierra", "Luna");
+    printf("%-28s | %12.1f | %12.1f\n", "Radio (km)", radios[0] / 1000.0, radios[1] / 1000.0);
+    printf("%-28s | %12.3e | %12.3e\n", "Pozo de potencial (J/kg)", pozo[0], pozo[1]);
+    printf("%-28s | %12.1f | %12.1f\n", "Velocidad de escape (m/s)", vEsc[0], vEsc[1]);
+    printf("%-28s | %12.3e | %12.3e\n", "Energia para escapar (J)", energia[0], energia[1]);
+
+    printf("\nCombustible estimado (ve = %.0f m/s):\n", VE_COMBUSTIBLE);
+    printf("  Ida (escapar de la Tierra): %10.0f kg\n", comb[0]);
+    printf("  Vuelta (escapar de la Luna): %9.0f kg\n", comb[1]);
+    printf("  La ida requiere %.1f veces mas combustible que la vuelta.\n", comb[0] / comb[1]);
+
+    printf("\nAyudas al regreso:\n"
+           "  - La gravedad terrestre acelera a Orion durante la caida hacia la Tierra.\n"
+           "  - La atmosfera frena la capsula sin gastar combustible (escenario 4).\n"
+           "Modelo simplificado: sin perdidas gravitatorias ni maniobras reales.\n");
 }

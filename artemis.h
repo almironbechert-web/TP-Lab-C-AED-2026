@@ -11,6 +11,9 @@
 #define MASA_ORION     26000.0
 #define PASO_DISTANCIA 20000000.0
 #define MAX_TURNOS     25
+#define MASA_LUNA      7.342e22
+#define RADIO_LUNA     1737400.0
+#define VE_COMBUSTIBLE 4500.0   /* velocidad de escape de gases (H2-O2), m/s */
 
 /* ===== Estructuras ===== */
 typedef struct {
@@ -28,6 +31,12 @@ double distanciaMaxima(double v0, double r0);
 /* ===== Energia (Escenario 3, item b) ===== */
 double energiaCinetica(double masa, double velocidad);
 
+/* ===== Justificacion energetica (Escenario 3, item d) ===== */
+double pozoPotencial(double masaCuerpo, double radio);
+double velocidadEscape(double masaCuerpo, double radio);
+double energiaEscape(double masaNave, double masaCuerpo, double radio);
+double combustibleNecesario(double masaNave, double deltaV);
+
 /* ===== Simulacion (Escenario 3, item a) ===== */
 void cargarNave(Nave *nave);
 int  simularInercia(Nave *nave, Nave historial[], int maxTurnos);
@@ -36,6 +45,7 @@ int  simularInercia(Nave *nave, Nave historial[], int maxTurnos);
 void mostrarIntroduccion(void);
 void mostrarEnergiaCinetica(const Nave *nave);
 void mostrarHistorial(const Nave historial[], int cantidad);
+void mostrarJustificacionEnergetica(const Nave *nave);
 void mostrarResultadoFinal(const Nave *nave);
 
 #endif
