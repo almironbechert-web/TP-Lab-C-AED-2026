@@ -128,9 +128,7 @@ En cada turno, el usuario ingresa una velocidad de inyección. Con estos datos, 
 
 ### Análisis físico
 
-La opción **Análisis físico** ejecuta la función `ejecutarAnalisisFisico()`, que coordina los diferentes cálculos implementados en el módulo `artemis.c`. Inicialmente, el programa permite utilizar los datos del enunciado o ingresar valores personalizados de masa, velocidad y altura orbital.
-
-A continuación, simula el desplazamiento de Orion y muestra una tabla con la distancia, la velocidad y la aceleración gravitatoria calculadas en cada tramo.
+La opción **Análisis físico** ejecuta la función `ejecutarAnalisisFisico()`, que coordina los diferentes cálculos implementados en el módulo `artemis.c`. Inicialmente, el programa permite utilizar los datos del enunciado o ingresar valores personalizados de masa, velocidad y altura orbital. A continuación, simula el desplazamiento de Orion y muestra una tabla con la distancia, la velocidad y la aceleración gravitatoria calculadas en cada tramo.
 
 El análisis contempla los siguientes apartados:
 
