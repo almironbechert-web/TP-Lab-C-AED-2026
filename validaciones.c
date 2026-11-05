@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "validaciones.h"
+#include <math.h>
 
 void leerLinea(char *entrada) {
     if (fgets(entrada, LARGO_ENTRADA, stdin) == NULL) {
@@ -20,7 +21,7 @@ double leerDouble(const char *mensaje, double min, double max) {
         printf("%s [%.0f - %.0f]: ", mensaje, min, max);
         leerLinea(entrada);
         valor = strtod(entrada, &fin);
-        if (fin == entrada || *fin != '\0') {
+        if (fin == entrada || *fin != '\0'|| !isfinite(valor)) {
             printf("ERROR: ingrese solo un numero.\n");
         } else if (valor < min || valor > max) {
             printf("ERROR: valor fuera de rango.\n");
