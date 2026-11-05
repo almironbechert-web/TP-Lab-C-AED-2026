@@ -58,4 +58,4 @@ void ejecutarAnalisisFisico(void);
 void mostrarResultadoFinal(const Nave *final, const Nave *inicial);
  
 #endif
-}
+
