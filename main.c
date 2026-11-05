@@ -12,7 +12,7 @@ int main(void) {
     do {
         printf("\n=== ARTEMIS - INYECCION TRANSLUNAR ===\n"
                "1. Jugar mision\n"
-               "2. Analisis fisico (items a, b y d)\n"
+               "2. Analisis fisico (items a, b, c y d)\n"
                "3. Ver reporte de la ultima mision\n"
                "4. Reglas del juego\n"
                "0. Salir\n");
